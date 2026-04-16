@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enter.pro Credits 充值申请台</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">Enter.pro for WaytoAGI</p>
+          <h1>Credits 充值申请台</h1>
+          <p class="hero__text">
+            纯前端版本，完整模拟学员提交申请、管理员处理工单、学员刷新查看到账结果的闭环。
+          </p>
+          <div id="data-source-banner" class="data-source-banner">
+            正在初始化数据连接...
+          </div>
+          <div class="hero__chips">
+            <span>申请页 + 结果页</span>
+            <span>登录页 + 工单后台</span>
+            <span>Supabase + 本地回退</span>
+          </div>
+        </div>
+        <div class="hero__stats">
+          <article class="hero-stat">
+            <span>工单总数</span>
+            <strong id="hero-total">0</strong>
+          </article>
+          <article class="hero-stat">
+            <span>待处理</span>
+            <strong id="hero-pending">0</strong>
+          </article>
+          <article class="hero-stat">
+            <span>已通过</span>
+            <strong id="hero-approved">0</strong>
+          </article>
+        </div>
+      </header>
+
+      <nav class="portal-switcher" aria-label="portal switcher">
+        <button class="portal-tab is-active" type="button" data-portal="student">学员端</button>
+        <button class="portal-tab" type="button" data-portal="admin">管理员后台</button>
+      </nav>
+
+      <main class="portal-stack">
+        <section id="student-portal" class="portal-section is-active">
+          <div class="section-intro">
+            <div>
+              <p class="section-intro__eyebrow">Student Flow</p>
+              <h2>充值申请页</h2>
+              <p>学员填写申请信息后，进入申请结果页，可随时刷新查看最新状态。</p>
+            </div>
+            <div class="section-intro__actions">
+              <button type="button" class="button button--ghost" id="student-form-tab">申请表单</button>
+              <button type="button" class="button button--ghost" id="student-result-tab">申请结果</button>
+            </div>
+          </div>
+
+          <div class="student-layout">
+            <section class="panel student-panel is-active" id="student-form-panel">
+              <div class="panel__header">
+                <div>
+                  <p class="panel__eyebrow">Application Form</p>
+                  <h3>提交 Credits 充值申请</h3>
+                </div>
+                <span class="badge">所有必填项完成后才可提交</span>
+              </div>
+
+              <form id="application-form" class="application-form" novalidate>
+                <label>
+                  <span>邮箱地址</span>
+                  <input
+                    id="email-input"
+                    name="email"
+                    type="email"
+                    placeholder="用于记录学员的 enter.pro 邮箱账号"
+                    required
+                  />
+                  <small class="field-hint">必填，校验邮箱格式</small>
+                </label>
+                <label>
+                  <span>名称</span>
+                  <input
+                    id="name-input"
+                    name="name"
+                    type="text"
+                    maxlength="20"
+                    placeholder="支持中文和英文，最多 20 字符"
+                    required
+                  />
+                  <small class="field-hint">必填，最多 20 字符</small>
+                </label>
+                <label class="application-form__wide">
+                  <span>所学课程</span>
+                  <select id="course-input" name="course" required>
+                    <option value="">请选择课程</option>
+                    <option value="AI Coding 入门课">AI Coding 入门课</option>
+                    <option value="Agentic Coding 工作流课">Agentic Coding 工作流课</option>
+                    <option value="Vibe Coding 项目实践课">Vibe Coding 项目实践课</option>
+                    <option value="Enter.pro 平台实战营">Enter.pro 平台实战营</option>
+                  </select>
+                  <small class="field-hint">必填，下拉选择</small>
+                </label>
+                <div class="application-form__wide form-actions">
+                  <button type="submit" class="button button--primary" id="submit-button" disabled>
+                    提交申请
+                  </button>
+                  <button type="reset" class="button button--ghost">重填</button>
+                  <button type="button" class="button button--soft" id="fill-demo">
+                    填入演示数据
+                  </button>
+                </div>
+                <p id="form-feedback" class="form-feedback" aria-live="polite"></p>
+              </form>
+            </section>
+
+            <section class="panel student-panel" id="student-result-panel">
+              <div class="panel__header">
+                <div>
+                  <p class="panel__eyebrow">Application Result</p>
+                  <h3>申请结果页</h3>
+                </div>
+                <span class="badge badge--teal">刷新即可获取最新充值状态</span>
+              </div>
+              <p class="panel-helper">
+                当前为演示优先模式：学员无需登录，页面会记住你最近一次提交的申请单。
+              </p>
+
+              <div id="student-result-empty" class="empty-state">
+                你还没有提交申请。先填写左侧表单，提交成功后会自动跳转到这里。
+              </div>
+
+              <article id="student-result-card" class="result-card" hidden>
+                <div class="result-card__top">
+                  <div>
+                    <p class="result-card__label">当前申请单</p>
+                    <h4 id="result-title"></h4>
+                  </div>
+                  <span id="result-status" class="status-pill"></span>
+                </div>
+
+                <dl class="result-card__grid">
+                  <div>
+                    <dt>邮箱地址</dt>
+                    <dd id="result-email"></dd>
+                  </div>
+                  <div>
+                    <dt>所学课程</dt>
+                    <dd id="result-course"></dd>
+                  </div>
+                  <div>
+                    <dt>提交时间</dt>
+                    <dd id="result-created-at"></dd>
+                  </div>
+                  <div>
+                    <dt>最近更新</dt>
+                    <dd id="result-updated-at"></dd>
+                  </div>
+                </dl>
+
+                <div class="timeline">
+                  <div class="timeline__item">
+                    <strong>申请已提交</strong>
+                    <span>等待管理员在充值后台查看并处理你的申请工单。</span>
+                  </div>
+                  <div class="timeline__item" id="result-progress"></div>
+                </div>
+
+                <div class="result-note">
+                  <p class="result-note__label">处理反馈</p>
+                  <p id="result-note"></p>
+                </div>
+
+                <div class="result-actions">
+                  <button type="button" class="button button--primary" id="refresh-result">
+                    刷新状态
+                  </button>
+                  <button type="button" class="button button--ghost" id="new-application">
+                    再次提交
+                  </button>
+                </div>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <section id="admin-portal" class="portal-section">
+          <div class="section-intro">
+            <div>
+              <p class="section-intro__eyebrow">Admin Flow</p>
+              <h2>申请处理后台</h2>
+              <p>管理员先登录后台，再查看工单列表，按时间倒序处理具体申请。</p>
+            </div>
+            <button type="button" class="button button--ghost" id="reset-data">重置演示数据</button>
+          </div>
+
+          <div class="admin-layout">
+            <section class="panel admin-panel" id="admin-login-panel">
+              <div class="panel__header">
+                <div>
+                  <p class="panel__eyebrow">Admin Login</p>
+                  <h3>登录后台</h3>
+                </div>
+                <span class="badge">邮箱密码登录</span>
+              </div>
+
+              <form id="admin-login-form" class="login-form">
+                <label>
+                  <span>管理员邮箱</span>
+                  <input
+                    id="admin-email-input"
+                    name="adminEmail"
+                    type="email"
+                    value="18782923973@163.com"
+                    placeholder="请输入管理员邮箱"
+                    required
+                  />
+                </label>
+                <label>
+                  <span>密码</span>
+                  <input
+                    id="admin-password-input"
+                    name="adminPassword"
+                    type="password"
+                    placeholder="请输入管理员密码"
+                    required
+                  />
+                </label>
+                <div class="form-actions">
+                  <button type="submit" class="button button--primary" id="admin-login-button">登录</button>
+                </div>
+                <p class="form-feedback" id="admin-login-feedback">
+                  管理员账号已预填邮箱，输入密码后即可进入后台。
+                </p>
+              </form>
+            </section>
+
+            <section class="panel admin-panel" id="admin-dashboard-panel" hidden>
+              <div class="panel__header">
+                <div>
+                  <p class="panel__eyebrow">Ticket Console</p>
+                  <h3>申请工单列表</h3>
+                </div>
+                <span class="badge badge--teal" id="admin-login-state">已登录</span>
+              </div>
+
+              <div class="admin-toolbar">
+                <div class="summary-cards">
+                  <article class="summary-card">
+                    <span>总申请数</span>
+                    <strong id="summary-total">0</strong>
+                  </article>
+                  <article class="summary-card">
+                    <span>待处理</span>
+                    <strong id="summary-pending">0</strong>
+                  </article>
+                  <article class="summary-card">
+                    <span>已驳回</span>
+                    <strong id="summary-rejected">0</strong>
+                  </article>
+                </div>
+
+                <div class="toolbar-actions">
+                  <select id="status-filter">
+                    <option value="all">全部状态</option>
+                    <option value="pending">待处理</option>
+                    <option value="approved">通过</option>
+                    <option value="rejected">驳回</option>
+                  </select>
+                  <button type="button" class="button button--ghost" id="refresh-admin">
+                    刷新工单
+                  </button>
+                  <button type="button" class="button button--soft" id="logout-admin">
+                    退出登录
+                  </button>
+                </div>
+              </div>
+
+              <div class="admin-workspace">
+                <div class="ticket-list-wrap">
+                  <div class="ticket-list__header">
+                    <p>工单按申请时间降序排列，一页 20 条</p>
+                    <p id="pagination-meta"></p>
+                  </div>
+                  <div id="ticket-list" class="ticket-list"></div>
+                  <div class="pagination">
+                    <button type="button" class="button button--ghost" id="prev-page">上一页</button>
+                    <span id="page-indicator">第 1 页</span>
+                    <button type="button" class="button button--ghost" id="next-page">下一页</button>
+                  </div>
+                </div>
+
+                <aside class="ticket-detail" id="ticket-detail">
+                  <div class="ticket-detail__empty empty-state">
+                    点击左侧工单列表项后，可以查看完整信息并执行通过或驳回。
+                  </div>
+
+                  <div id="ticket-detail-content" hidden>
+                    <div class="ticket-detail__header">
+                      <div>
+                        <p class="panel__eyebrow">Ticket Detail</p>
+                        <h4 id="detail-title"></h4>
+                      </div>
+                      <span id="detail-status" class="status-pill"></span>
+                    </div>
+
+                    <dl class="detail-grid">
+                      <div>
+                        <dt>邮箱地址</dt>
+                        <dd id="detail-email"></dd>
+                      </div>
+                      <div>
+                        <dt>所学课程</dt>
+                        <dd id="detail-course"></dd>
+                      </div>
+                      <div>
+                        <dt>提交时间</dt>
+                        <dd id="detail-created-at"></dd>
+                      </div>
+                      <div>
+                        <dt>最近更新</dt>
+                        <dd id="detail-updated-at"></dd>
+                      </div>
+                    </dl>
+
+                    <div class="detail-note">
+                      <p class="detail-note__label">申请说明</p>
+                      <p id="detail-note"></p>
+                    </div>
+
+                    <label class="admin-note">
+                      <span>驳回理由 / 处理备注</span>
+                      <textarea
+                        id="detail-feedback"
+                        rows="4"
+                        placeholder="驳回时请填写理由；通过时可填写到账说明。"
+                      ></textarea>
+                    </label>
+
+                    <div class="detail-actions">
+                      <button type="button" class="button button--primary" id="approve-ticket">
+                        标记为已充值
+                      </button>
+                      <button type="button" class="button button--danger" id="reject-ticket">
+                        驳回申请
+                      </button>
+                    </div>
+                    <p id="detail-feedback-message" class="form-feedback" aria-live="polite"></p>
+                  </div>
+                </aside>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./supabase-config.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
