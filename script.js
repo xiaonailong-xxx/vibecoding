@@ -229,7 +229,7 @@ function formatTimestamp(value) {
   return `${year}-${month}-${day} ${hour}:${minute}`
 }
 
-const supabaseConfig = window.SUPABASE_CONFIG || {}
+const supabaseConfig = window.APP_CONFIG?.supabase || window.SUPABASE_CONFIG || {}
 const supabaseReady = Boolean(
   window.supabase &&
   supabaseConfig.url &&

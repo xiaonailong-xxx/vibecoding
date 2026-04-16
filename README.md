@@ -36,8 +36,7 @@
 - `index.html`：页面结构
 - `styles.css`：视觉样式
 - `script.js`：交互逻辑、Supabase 接入和本地回退逻辑
-- `supabase-config.example.js`：Supabase 前端配置示例
-- `supabase-config.js`：本地实际配置文件
+- `public-config.js`：前端公开配置，适合直接部署到 Netlify
 - `supabase-schema.sql`：Supabase 建表和策略脚本
 
 ## 使用方式
@@ -45,7 +44,7 @@
 1. 在 Supabase 控制台新建项目。
 2. 运行 [supabase-schema.sql](/Users/enen/Documents/New%20project/supabase-schema.sql) 里的 SQL。
 3. 在 Supabase 的 `Authentication > Users` 中创建一个管理员账号。
-4. 把你的项目 URL 和 anon key 填入 [supabase-config.js](/Users/enen/Documents/New%20project/supabase-config.js)。
+4. 如果要换 Supabase 项目，修改 [public-config.js](/Users/enen/Documents/New%20project/public-config.js) 里的公开配置。
 5. 打开 `/Users/enen/Documents/New project/index.html` 即可。
 
 ## 注意
@@ -55,6 +54,8 @@
 - 学员提交申请不需要登录
 - 管理员登录走 Supabase Auth
 - 为了让学员端能在纯前端里刷新查看申请结果，当前 Supabase 表的读取策略是前端可读的
+- `public-config.js` 中只应放前端公开信息，例如 `project URL` 和 `publishable/anon key`
+- 绝对不要把 `service_role key` 放进仓库或前端文件
 
 这意味着它适合课程演示和原型验证，但还不适合直接作为正式生产方案上线。
 
