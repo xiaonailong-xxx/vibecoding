@@ -3,8 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enter.pro Credits 充值申请台</title>
+    <title>Enter.pro Credits 充值申请台 | WaytoAGI 学员申请与管理员审核平台</title>
+    <meta
+      name="description"
+      content="Enter.pro Credits 充值申请台，面向 WaytoAGI AI Coding 课程学员提供 Credits 申请、结果查询和管理员工单审核的一体化入口。"
+    />
+    <meta
+      name="keywords"
+      content="Enter.pro, Credits 充值申请, WaytoAGI, AI Coding, Agentic Coding, Vibe Coding, 学员申请, 管理员审核"
+    />
+    <meta name="author" content="Enter.pro" />
+    <meta name="robots" content="index, follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#f3efe7" />
+    <meta name="application-name" content="Enter.pro Credits 充值申请台" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="Enter.pro Credits 充值申请台" />
+    <meta
+      property="og:title"
+      content="Enter.pro Credits 充值申请台 | WaytoAGI 学员申请与管理员审核平台"
+    />
+    <meta
+      property="og:description"
+      content="面向 WaytoAGI 课程学员的 Credits 申请与结果查询入口，同时支持管理员查看申请工单、完成充值审核。"
+    />
+    <meta property="og:url" content="/" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Enter.pro Credits 充值申请台 | WaytoAGI 学员申请与管理员审核平台"
+    />
+    <meta
+      name="twitter:description"
+      content="学员提交 Credits 申请、查询处理结果，管理员统一审核工单的在线平台。"
+    />
+    <meta name="twitter:url" content="/" />
+
+    <link rel="canonical" id="canonical-link" href="/" />
     <link rel="stylesheet" href="./styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Enter.pro Credits 充值申请台",
+        "inLanguage": "zh-CN",
+        "description": "面向 WaytoAGI AI Coding 课程学员的 Credits 申请、结果查询和管理员审核平台。",
+        "potentialAction": {
+          "@type": "ApplyAction",
+          "name": "提交 Credits 申请"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Enter.pro Credits 充值申请台",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "zh-CN",
+        "description": "用于课程学员提交 Enter.pro Credits 申请、查看申请结果，并支持管理员审核申请工单的网页应用。",
+        "featureList": [
+          "学员提交 Credits 申请",
+          "学员刷新查看申请结果",
+          "管理员登录审核申请工单",
+          "Supabase 数据存储与认证"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div class="page-shell">
@@ -358,6 +427,25 @@
       </main>
     </div>
 
+    <script>
+      ;(() => {
+        const canonicalLink = document.querySelector('#canonical-link')
+        if (canonicalLink) {
+          canonicalLink.href = window.location.origin + window.location.pathname
+        }
+
+        const setMeta = (selector, content) => {
+          const element = document.querySelector(selector)
+          if (element) {
+            element.setAttribute('content', content)
+          }
+        }
+
+        const absoluteUrl = window.location.origin + window.location.pathname
+        setMeta('meta[property="og:url"]', absoluteUrl)
+        setMeta('meta[name="twitter:url"]', absoluteUrl)
+      })()
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./public-config.js"></script>
     <script src="./script.js"></script>

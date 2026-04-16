@@ -37,6 +37,7 @@
 - `styles.css`：视觉样式
 - `script.js`：交互逻辑、Supabase 接入和本地回退逻辑
 - `public-config.js`：前端公开配置，适合直接部署到 Netlify
+- `robots.txt`：基础搜索引擎抓取配置
 - `supabase-schema.sql`：Supabase 建表和策略脚本
 
 ## 使用方式
